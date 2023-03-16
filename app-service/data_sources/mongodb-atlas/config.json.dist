@@ -1,0 +1,10 @@
+{
+    "name": "YOUR-DATASOURCE-NAME",
+    "type": "YOUR-DATASOURCE-NAME",
+    "config": {
+        "clusterName": "YOUR-CLUSTER-NAME",
+        "readPreference": "primary",
+        "wireProtocolEnabled": false
+    },
+    "version": 1
+}

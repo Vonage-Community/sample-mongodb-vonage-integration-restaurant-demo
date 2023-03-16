@@ -1,0 +1,21 @@
+{
+    "collection": "inventory",
+    "database": "restaurant_pos_demo",
+    "roles": [
+        {
+            "name": "admin-write",
+            "apply_when": {
+                "%%user.custom_data.admin": true
+            },
+            "document_filters": {
+                "write": true,
+                "read": true
+            },
+            "read": true,
+            "write": true,
+            "insert": true,
+            "delete": true,
+            "search": true
+        }
+    ]
+}

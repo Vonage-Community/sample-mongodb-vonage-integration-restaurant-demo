@@ -1,0 +1,7 @@
+{
+    "enabled": true,
+    "mongo_service_name": "YOUR-LINKED-DATA-SOURCE",
+    "database_name": "YOUR-DATABASE-NAME",
+    "collection_name": "user_custom_data",
+    "user_id_field": "user_id"
+}

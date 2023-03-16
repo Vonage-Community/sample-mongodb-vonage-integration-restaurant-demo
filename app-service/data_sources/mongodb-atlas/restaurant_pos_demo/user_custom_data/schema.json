@@ -1,0 +1,14 @@
+{
+    "title": "user_custom_datum",
+    "properties": {
+      "_id": {
+        "bsonType": "objectId"
+      },
+      "admin": {
+        "bsonType": "bool"
+      },
+      "user_id": {
+        "bsonType": "string"
+      }
+    }
+  }

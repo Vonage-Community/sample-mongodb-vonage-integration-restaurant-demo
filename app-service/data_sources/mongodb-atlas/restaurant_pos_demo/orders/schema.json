@@ -1,0 +1,29 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "items": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "lastUpdated": {
+            "bsonType": "string"
+        },
+        "meetingUrl": {
+            "bsonType": "string"
+        },
+        "orderTime": {
+            "bsonType": "string"
+        },
+        "status": {
+            "bsonType": "int"
+        },
+        "user_id": {
+            "bsonType": "objectId"
+        }
+    },
+    "title": "order"
+}
