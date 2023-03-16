@@ -8,9 +8,9 @@ To run the demo, please see [webapp/README.md](webapp/README.md).
 
 ### Requirements
 
-* [MongoDB Account]
-* [Vonage Developer Account]
-* [Realm CLI]
+* [MongoDB Account](https://www.mongodb.com/cloud/atlas/register)
+* [Vonage Developer Account](https://developer.vonage.com/sign-up)
+* [Realm CLI](https://www.mongodb.com/docs/atlas/app-services/cli/)
 * Node.js 16+
 
 ### Set up MongoDB Atlas
