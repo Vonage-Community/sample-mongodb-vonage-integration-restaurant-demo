@@ -1,29 +1,23 @@
 <script setup lang="ts">
+import { MongoDBRealmError } from 'realm-web';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
+import { authenticationStore } from '../stores/authenticationStore';
 
 const router = useRouter();
 const username = ref('')
 const password = ref('')
+const authStore = authenticationStore()
 
 const login = async () => {
-    fetch(import.meta.env.VITE_API_URL + '/api/authenticate', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            username: username.value,
-            password: password.value,
-        })
-    })
-        .then(resp => resp.json())
-        .then(json => {
-            localStorage.setItem('token', json.token);
-            router.push({ name: 'inventory.home' });
-        })
-        .catch(err => console.log(err));
-
+    try {
+        await authStore.login(username.value, password.value)
+        router.push({ name: 'inventory.home' });
+    } catch (error) {
+        if (error instanceof MongoDBRealmError) {
+            console.log(error.errorCode)
+        }
+    }
 }
 </script>
 

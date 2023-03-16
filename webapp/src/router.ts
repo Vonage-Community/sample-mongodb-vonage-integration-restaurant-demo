@@ -85,7 +85,7 @@ router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         const token = localStorage.getItem('token');
 
-        if (token) {
+        if (authStore.user) {
             next()
         }
 

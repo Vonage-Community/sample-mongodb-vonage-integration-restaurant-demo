@@ -209,7 +209,7 @@ app.post('/api/website/video-call', async (req, res) => {
     const privateKey = readFileSync(process.env.VONAGE_PRIVATE_KEY);
     const token = tokenGenerate(process.env.VONAGE_APPLICATION_ID, privateKey);
 
-    fetch('https://api-eu.vonage.com/beta/meetings/rooms', {
+    fetch('https://api-eu.vonage.com/v1/meetings/rooms', {
         method: 'POST',
         body: JSON.stringify({
             display_name: 'Restaurant Demo',

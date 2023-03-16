@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-const router = useRouter();
+import { mongodbStore } from '../stores/mongodbStore';
+
+const dbStore = mongodbStore()
 
 const newDishName = ref('');
 const newDishPrice = ref(0);
@@ -9,34 +10,38 @@ const newDishPrice = ref(0);
 let inventory = ref(Array());
 
 async function getInventory() {
-    await fetch(import.meta.env.VITE_API_URL + '/api/inventory')
-        .then(resp => resp.json())
-        .then(data => {
-            inventory.value = []
-            data.forEach((dish: {name: string, price: string}) => {
-                inventory.value.push(dish)
-            })
-        })
-        .catch(err => console.log(err));
+    const dishes = await dbStore.getInventoryCollection().find()
+    inventory.value = Array()
+    dishes.forEach(dish => {
+        if (dish.name) {
+            inventory.value.push(dish)
+        }
+    })
 }
 
 async function addInventoryItem() {
-    await fetch(import.meta.env.VITE_API_URL + '/api/inventory', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+    dbStore.getInventoryCollection()
+        .insertOne({
             name: newDishName.value,
-            price: newDishPrice.value * 100,
+            price: newDishPrice.value * 100
         })
-    })
-        .then(async (resp) => {
-            await getInventory()
-            newDishName.value = '';
-            newDishPrice.value = 0;
-        })
-        .catch(err => console.log(err));
+        .then(() => {
+            getInventory()
+            newDishName.value = ''
+            newDishPrice.value = 0
+        }).catch(error => {
+            console.error(error)
+        });
+}
+
+async function deleteItem(id) {
+    dbStore.getInventoryCollection()
+        .deleteOne({_id: id})
+        .then(() => {
+            getInventory()
+        }).catch(error => {
+            console.error(error)
+        });
 }
 
 await getInventory();
@@ -48,7 +53,7 @@ await getInventory();
 
         <div>
             <ul>
-                <li class="rounded border-2 p-4 m-2" v-for="dish in inventory" :key="dish.name">{{dish.name}} - $ {{(dish.price / 100)}}</li>
+                <li class="rounded border-2 p-4 m-2" v-for="dish in inventory" :key="dish.name">{{dish.name}} - $ {{(dish.price / 100)}} | <a @click="deleteItem(dish._id)">Delete</a></li>
             </ul>
         </div>
 
