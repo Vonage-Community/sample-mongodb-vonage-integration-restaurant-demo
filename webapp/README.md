@@ -6,26 +6,9 @@ This demo is comprised of two parts - a Vite/Vue-based front-end application and
 
 This demo shows off a more full-fledged way to integrate Vonage Verify, Vonage Messages, and the Vonage Meetings API in a structured application. It is powered by MongoDB's Atlas cloud database service, and can be managed by any MongoDB-compatible suite of tools. 
 
-### Set up MongoDB Atlas
+## Configuration
 
-1. To go `https://mogodb.com` and sign up for a free account
-1. Create an M0 instance on your provider of choice
-1. For now, use "Username and Password" authentication. Feel free to change the suggested username and password as you see fit. When you are ready, click "Create User"
-1. Select "My Local Environment" for where you would like to connect from.
-1. Your local public IP address should already be added to the IP Access List.
-1. Click "Finish and Close"
-
-### Set up a Vonage Account
-
-1. Sign up for a free account at [https://developer.vonage.com/sign-up](https://developer.vonage.com/sign-up)
-1. Under "Build & Manage", select "Applications"
-1. Click "Create a new application"
-1. Give the application a name
-1. Click "Generate public and private key" to download a new private key for this application
-1. Enable the Messages and Meetings API Capabilities
-1. For now, just enter `https://example.com` for the Inbound and Status URLs for Messages
-1. Click "Generate new application" at the bottom
-1. Under the "Link Numbers" section, click the "Link" button to attach your Vonage Number to this application
+Make sure that you have completed all the [basic configuration and setup](../README.md#basic-configuration)
 
 ### Set up the Application
 1. Clone this repository with `git clone`
