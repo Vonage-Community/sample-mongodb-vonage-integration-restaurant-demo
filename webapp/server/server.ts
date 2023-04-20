@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { Vonage } from "@vonage/server-sdk";
 import { Auth } from '@vonage/auth'
+import { SMS } from '@vonage/messages'
 import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'
 import { tokenGenerate } from '@vonage/jwt'
@@ -161,7 +162,7 @@ app.post('/api/website/order', async (req, res) => {
     });
     
     if (process.env.ENABLE_SMS === "1") {
-        await vonage.sms.send({to: userRecord.phone, from: '18003819125', text: 'Your order has been submitted'});
+        await vonage.messages.send(new SMS('Your order has been submitted', userRecord.phone, process.env.VONAGE_FROM));
     }
 
     res.json({id: result.insertedId});
@@ -209,7 +210,7 @@ app.post('/api/website/video-call', async (req, res) => {
     const privateKey = readFileSync(process.env.VONAGE_PRIVATE_KEY);
     const token = tokenGenerate(process.env.VONAGE_APPLICATION_ID, privateKey);
 
-    fetch('https://api-eu.vonage.com/v1/meetings/rooms', {
+    fetch('https://api-eu.vonage.com/beta/meetings/rooms', {
         method: 'POST',
         body: JSON.stringify({
             display_name: 'Restaurant Demo',

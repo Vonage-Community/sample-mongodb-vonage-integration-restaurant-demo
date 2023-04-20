@@ -1,26 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-
-import SvgIcon from '@jamescoyle/vue-icon'
 import { shoppingCartStore } from '../../stores/shoppingCartStore';
 
 const cartStore = shoppingCartStore()
-
 const router = useRouter();
-
-const newDishName = ref('');
-const newDishPrice = ref(0);
-
-
 let inventory = ref(Array());
-// let currentOrder = ref(Array());
-// let localOrder = localStorage.getItem('localCart');
-// if (localOrder) {
-//     currentOrder.value = JSON.parse(localOrder);
-// }
-// let currentOrder = ref([]);
-console.log(cartStore.currentOrder)
 
 async function getInventory() {
     await fetch(import.meta.env.VITE_API_URL + '/api/inventory')
