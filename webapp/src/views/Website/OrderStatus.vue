@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { authenticationStore } from '../../stores/authenticationStore';
 const router = useRouter();
 
 let currentOrder = ref(localStorage.getItem('currentOrderNumber'));
+const authStore = authenticationStore();
 
 async function makeVideoCall() {
     await fetch(import.meta.env.VITE_API_URL + '/api/website/video-call', {
@@ -13,6 +15,7 @@ async function makeVideoCall() {
         }),
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authStore.token
         }
     })
         .then(resp => resp.json())

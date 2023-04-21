@@ -210,12 +210,14 @@ app.post('/api/website/video-call', async (req, res) => {
     const privateKey = readFileSync(process.env.VONAGE_PRIVATE_KEY);
     const token = tokenGenerate(process.env.VONAGE_APPLICATION_ID, privateKey);
 
+    const bearerToken = req.header('authorization').split(' ')[1]
+    const decodedToken = jwt.decode(bearerToken);
+
     fetch('https://api-eu.vonage.com/beta/meetings/rooms', {
         method: 'POST',
         body: JSON.stringify({
             display_name: 'Restaurant Demo',
-            type: 'instant',
-            theme_id: '6ba90e1b-c27a-45e8-9e49-877634c315b0'
+            type: 'instant'
         }),
         headers: {
             'Authorization': 'Bearer ' + token,
@@ -228,8 +230,9 @@ app.post('/api/website/video-call', async (req, res) => {
             console.log('host url: ' + data._links.host_url.href)
             const orderRecord = await client.db('restaurant_pos_demo').collection('orders').updateOne({ _id: new ObjectId(orderNumber) }, { $set: { meetingUrl: data._links.host_url.href}})
                 .then(async (document) => {
+                    const userRecord = await client.db('restaurant_pos_demo').collection('users').findOne({ _id: new ObjectId(decodedToken.user_id) });
                     await conversations.addEventToConversation(
-                        'pos-notifications', 'chris@ctankersley.com', {type: 'custom:support_request', body: { host_url: data._links.host_url.href, email: 'chris@ctankersley.com'}});
+                        'pos-notifications', userRecord.username, {type: 'custom:support_request', body: { host_url: data._links.host_url.href, email: userRecord.username}});
                     res.json({
                         guest_url: data._links.guest_url.href
                     })
@@ -243,31 +246,27 @@ app.get('/api/pos/notifications', async (req, res) => {
 })
 
 app.get('/get-events', async (req, res) => {
-    // await conversations.addEventToConversation('pos-notifications', 'chris@ctankersley.com', {type: 'support_request', body: {text: 'New Event with a key'}});
     const notifications = await conversations.fetchEventsByConversationName('pos-notifications');
     res.json(notifications);
 })
 
-app.get('/jwt', async (req, res) => {
+app.post('/jwt', async (req, res) => {
+    const { username } = req.body;
+    const conversation = await conversations.fetchByName('pos-notifications');
+    const conversationPath = `/*/conversations/${conversation.id}/**`;
+    let acl = {
+        "paths": {
+            "/*/sessions/**": { },
+          }
+    }
+    acl.paths[conversationPath] = { methods: ['GET'] }
+
     const key = readFileSync(process.env.VONAGE_PRIVATE_KEY);
     const token = tokenGenerate(process.env.VONAGE_APPLICATION_ID, key, {
-        sub: 'chris@ctankersley.com',
-        acl: {
-            "paths": {
-                "/*/users/**": {},
-                "/*/conversations/**": {},
-                "/*/sessions/**": {},
-                "/*/devices/**": {},
-                "/*/image/**": {},
-                "/*/media/**": {},
-                "/*/applications/**": {},
-                "/*/push/**": {},
-                "/*/knocking/**": {},
-                "/*/legs/**": {}
-              }
-        },
+        sub: username,
+        acl: acl,
     });
-    res.json({ token })
+    res.json({ token, conversation: conversation.id })
 })
 
 app.all('/rtc/events', async (req, res) => {

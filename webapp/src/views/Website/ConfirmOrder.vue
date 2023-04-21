@@ -13,7 +13,6 @@ async function submitOrder() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + authStore.token
         },
         body: JSON.stringify({
             items: ids,
